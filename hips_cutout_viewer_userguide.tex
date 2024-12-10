@@ -1,0 +1,104 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{HIPS Cutout Viewer User Guide}
+\author{Yogesh Wadadekar}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The HIPS Cutout Viewer is a graphical application for retrieving and displaying astronomical image cutouts from various sky surveys using the Hierarchical Progressive Survey (HiPS) system.
+
+\section{System Requirements}
+\begin{itemize}
+    \item Python 3.6 or later
+    \item Required packages: PyQt6, astropy, astroquery, matplotlib
+    \item Internet connection for accessing astronomical databases
+\end{itemize}
+
+\section{Getting Started}
+\subsection{Launch the Application}
+To start the application, run:
+\begin{verbatim}
+python hips_cutout_viewer.py
+\end{verbatim}
+
+\section{Main Interface}
+The interface consists of several key areas:
+
+\subsection{Input Section}
+\begin{itemize}
+    \item \textbf{Object Name:} Enter the name of an astronomical object (e.g., ``NGC 1300'')
+    \item \textbf{RA/Dec:} Direct input of coordinates in decimal degrees
+    \item \textbf{Size:} Field of view in degrees (default: 0.1)
+    \item \textbf{Resolve Name:} Button to obtain RA/Dec coordinates of chosen object using Simbad
+\end{itemize}
+
+\subsection{Survey Selection}
+\begin{itemize}
+    \item \textbf{Available Surveys:} Dropdown list of all available HiPS surveys
+    \item \textbf{Selected Surveys:} List of surveys chosen for cutout retrieval
+    \item Use ``Add $\rightarrow$'' and ``$\leftarrow$ Remove'' buttons to manage survey selection
+\end{itemize}
+
+\subsection{Action Buttons}
+\begin{itemize}
+    \item \textbf{Get Cutouts:} Retrieve images for selected surveys
+    \item \textbf{Save Collage:} Save the displayed images as a JPEG collage
+    \item \textbf{Download FITS:} Save FITS format files for the cutouts
+    \item \textbf{Reset:} Clear all inputs and return to default values
+\end{itemize}
+
+\section{Workflow}
+\begin{enumerate}
+    \item Enter an object name or coordinates
+    \item If using a name, click ``Resolve Name'' to get coordinates
+    \item Select desired surveys from the dropdown menu
+    \item Adjust the cutout size if needed
+    \item Click ``Get Cutouts'' to retrieve images
+    \item Optionally save the collage or download FITS files
+\end{enumerate}
+
+\section{Features}
+\subsection{Image Display}
+\begin{itemize}
+    \item Images are displayed in a grid layout
+    \item Each image includes:
+        \begin{itemize}
+            \item North-East orientation arrows
+            \item Scale bar (1 arcminute)
+            \item Survey identification
+        \end{itemize}
+\end{itemize}
+
+\subsection{FITS Downloads}
+\begin{itemize}
+    \item FITS files are saved in a 'fits' subdirectory
+    \item Files are named according to their survey ID
+    \item WCS information is preserved for scientific analysis
+\end{itemize}
+
+\section{Troubleshooting}
+\begin{itemize}
+    \item \textbf{Object Not Found:} Verify the object name in SIMBAD database
+    \item \textbf{No Images:} Check if the selected surveys cover the requested region
+    \item \textbf{Download Errors:} Verify internet connection and coordinates
+\end{itemize}
+
+\section{Tips}
+\begin{itemize}
+    \item Start with well-known objects to familiarize yourself with the interface
+    \item Use smaller field of view values for detailed views
+    \item Select complementary surveys for multi-wavelength analysis
+\end{itemize}
+
+\section{Technical Support}
+For technical issues or feature requests, please submit an issue on the project's repository.
+
+\end{document}
