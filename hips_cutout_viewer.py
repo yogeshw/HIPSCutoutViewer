@@ -258,12 +258,17 @@ class HipsCutoutGUI(QMainWindow):
     - Saving image collages
     - Downloading FITS format data
     """
-    DEFAULT_OBJECT_NAME = "NGC 1300"
+    DEFAULT_OBJECT_NAME = "M 51"
     DEFAULT_CUTOUT_SIZE = "0.1"
     MOCSERVER_URL = ("http://alasky.cds.unistra.fr/MocServer/query"
                      "?expr=(hips_frame%3Dequatorial%2Cgalactic%2Cecliptic+||+"
                      "hips_frame%3D!*)+%26%26+dataproduct_type!%3Dcatalog%2Ccube+"
                      "%26%26+hips_service_url%3D*&get=record")
+    DEFAULT_SURVEYS = [
+        "CDS/P/2MASS/color",
+        "CDS/P/HST/EPO",
+        "CDS/P/SDSS9/color"
+    ]
 
     def __init__(self):
         super().__init__()
@@ -309,6 +314,20 @@ class HipsCutoutGUI(QMainWindow):
         self.create_progress_log()
         self.create_plot_area()
         self.download_thread = None
+        
+        # Add default surveys to selected list
+        default_surveys = [
+            "CDS/P/2MASS/color",
+            "CDS/P/HST/EPO",
+            "CDS/P/SDSS9/color"
+        ]
+        
+        for survey_id in default_surveys:
+            if survey_id in self.hips_data:
+                item = QListWidgetItem(survey_id)
+                item.setData(Qt.ItemDataRole.UserRole, survey_id)
+                self.selected_list.addItem(item)
+                self.selected_surveys.append(survey_id)
 
     def create_central_widget(self):
         central_widget = QWidget()
@@ -741,14 +760,23 @@ class HipsCutoutGUI(QMainWindow):
                 ])
 
     def reset(self):
-        """Reset all inputs to default values"""
+        """Reset inputs to default values while preserving default surveys"""
         self.object_name.setText(self.DEFAULT_OBJECT_NAME)
         self.ra_input.clear()
         self.dec_input.clear()
+        self.size_input.setText(self.DEFAULT_CUTOUT_SIZE)
         
-        # Clear selected surveys
+        # Clear and restore default surveys
         self.selected_list.clear()
         self.selected_surveys = []
+        
+        # Re-add default surveys
+        for survey_id in self.DEFAULT_SURVEYS:
+            if survey_id in self.hips_data:
+                item = QListWidgetItem(survey_id)
+                item.setData(Qt.ItemDataRole.UserRole, survey_id)
+                self.selected_list.addItem(item)
+                self.selected_surveys.append(survey_id)
         
         # Clear the log and any displayed images
         self.log_text.clear()
