@@ -8,9 +8,18 @@
 \author{Yogesh Wadadekar}
 \date{\today}
 
+% Add copyright notice
 \begin{document}
 
 \maketitle
+
+\begin{center}
+\copyright{} 2024 Yogesh Wadadekar\\
+\vspace{0.5em}
+Project repository: \url{https://github.com/yogeshw/HIPSCutoutViewer}\\
+\vspace{0.5em}
+Licensed under the GPL 3 License
+\end{center}
 
 \section{Introduction}
 The HIPS Cutout Viewer is a graphical application for retrieving and displaying astronomical image cutouts from various sky surveys using the Hierarchical Progressive Survey (HiPS) system.
@@ -34,7 +43,7 @@ The interface consists of several key areas:
 
 \subsection{Input Section}
 \begin{itemize}
-    \item \textbf{Object Name:} Enter the name of an astronomical object (e.g., ``NGC 1300'')
+    \item \textbf{Object Name:} Enter the name of an astronomical object (default: ``M 51'')
     \item \textbf{RA/Dec:} Direct input of coordinates in decimal degrees
     \item \textbf{Size:} Field of view in degrees (default: 0.1)
     \item \textbf{Resolve Name:} Button to obtain RA/Dec coordinates of chosen object using Simbad
@@ -44,6 +53,12 @@ The interface consists of several key areas:
 \begin{itemize}
     \item \textbf{Available Surveys:} Dropdown list of all available HiPS surveys
     \item \textbf{Selected Surveys:} List of surveys chosen for cutout retrieval
+    \item \textbf{Default Surveys:} The following surveys are loaded by default:
+        \begin{itemize}
+            \item CDS/P/2MASS/color
+            \item CDS/P/HST/EPO
+            \item CDS/P/SDSS9/color
+        \end{itemize}
     \item Use ``Add $\rightarrow$'' and ``$\leftarrow$ Remove'' buttons to manage survey selection
 \end{itemize}
 
@@ -52,7 +67,7 @@ The interface consists of several key areas:
     \item \textbf{Get Cutouts:} Retrieve images for selected surveys
     \item \textbf{Save Collage:} Save the displayed images as a JPEG collage
     \item \textbf{Download FITS:} Save FITS format files for the cutouts
-    \item \textbf{Reset:} Clear all inputs and return to default values
+    \item \textbf{Reset:} Reset to default object (M 51) and default surveys while clearing other inputs
 \end{itemize}
 
 \section{Workflow}
@@ -93,12 +108,20 @@ The interface consists of several key areas:
 
 \section{Tips}
 \begin{itemize}
+    \item The default object M 51 (Whirlpool Galaxy) provides a good starting point for exploring the interface
+    \item Default surveys are preserved when using the Reset button
     \item Start with well-known objects to familiarize yourself with the interface
     \item Use smaller field of view values for detailed views
     \item Select complementary surveys for multi-wavelength analysis
 \end{itemize}
 
 \section{Technical Support}
-For technical issues or feature requests, please submit an issue on the project's repository.
+For technical issues, feature requests, or contributions, please visit the project repository at:\\
+\url{https://github.com/ywadadekar/HIPSCutoutViewer}
+
+You can submit issues, suggest improvements, or contribute to the development through pull requests.
+
+\section{License}
+This software is distributed under the GPL 3 License. The complete license text can be found in the LICENSE file in the project repository.
 
 \end{document}

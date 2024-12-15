@@ -1,3 +1,27 @@
+"""
+HIPSCutoutViewer - A tool for viewing astronomical image cutouts using HiPS.
+
+Author: Yogesh Wadadekar
+Copyright (c) 2024 Yogesh Wadadekar
+License: GPL 3 License
+
+Repository: https://github.com/yogeshw/HIPSCutoutViewer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ """
+
 import re
 import os  # Add to existing imports at top
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
