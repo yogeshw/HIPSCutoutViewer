@@ -23,7 +23,7 @@ Project repository: https://github.com/yogeshw/HIPSCutoutViewer
   - Scale bar (1 arcminute)
   - Survey labels
 - Save capabilities:
-  - Save image collages as JPEG
+  - Save image collages as PNG
   - Download FITS format files with WCS for scientific analysis
 
 ## Requirements

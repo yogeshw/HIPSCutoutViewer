@@ -142,10 +142,10 @@ class DownloadThread(QThread):
 
             # Download images
             images = []
-            labels = []
-            fov_quantity = getattr(self, 'fov', 0.1) * u.deg  # Use configured FOV or default
+            fov_quantity = getattr(self, 'fov', 0.1) * u.deg
 
-            for dataset in self.sort_datasets_by_filter_order(available_datasets):
+            # Use datasets directly without sorting
+            for dataset in available_datasets:
                 hips_id = dataset.get('ID', None)
                 if hips_id is None:
                     continue
@@ -172,46 +172,7 @@ class DownloadThread(QThread):
         except Exception as e:
             self.error.emit(str(e))
 
-    def sort_datasets_by_filter_order(self, datasets):
-        """
-        Sort datasets by their astronomical filter wavelength order.
-        
-        Args:
-            datasets (list): List of dataset dictionaries to sort
-            
-        Returns:
-            list: Sorted datasets from shortest to longest wavelength
-        """
-        # Remove duplicate filter_order dictionary and use get_filter_order_value
-        return sorted(datasets, key=self.get_filter_order_value)
-    
-    def get_filter_order_value(self, dataset):
-        """
-        Get the sorting value for a dataset based on its filter.
-        
-        Args:
-            dataset (dict): Dataset dictionary containing filter information
-            
-        Returns:
-            int: Sorting value (lower = shorter wavelength)
-        """
-        filter_order = {
-            'GALEX': 1,
-            'PanSTARRS/DR1/g': 2,
-            'PanSTARRS/DR1/r': 3,
-            'PanSTARRS/DR1/i': 4,
-            'PanSTARRS/DR1/z': 5,
-            'PanSTARRS/DR1/y': 6,
-            '2MASS/J': 7,
-            '2MASS/H': 8,
-            '2MASS/K': 9,
-            'WISE/W1': 10,
-            'WISE/W2': 11,
-            'WISE/W3': 12,
-            'WISE/W4': 13,
-            'JWST': 14
-        }
-        return filter_order.get(dataset.get('ID', ''), 999)
+    # Remove sort_datasets_by_filter_order and get_filter_order_value methods
 
     def download_fits(self, coords, fov_quantity, output_dir):
         """
@@ -412,24 +373,15 @@ class HipsCutoutGUI(QMainWindow):
         return inputs_layout
 
     def create_survey_selection(self):
-        """
-        Create the survey selection interface components.
-        
-        Returns:
-            QHBoxLayout: Layout containing the survey selection widgets
-            
-        Creates a two-column layout with available surveys on the left
-        and selected surveys on the right, with add/remove buttons.
-        """
+        """Create the survey selection interface with move buttons"""
         survey_layout = QHBoxLayout()
         
-        # Left side - Dropdown and Add button
+        # Left side - Available surveys
         left_layout = QVBoxLayout()
         self.survey_combo = QComboBox()
-        # Add items sorted by full ID
         sorted_items = sorted(self.hips_data.items())
         for survey_id, _ in sorted_items:
-            self.survey_combo.addItem(survey_id, survey_id)  # Both display and data are full ID
+            self.survey_combo.addItem(survey_id, survey_id)
         left_layout.addWidget(QLabel("Available Surveys:"))
         left_layout.addWidget(self.survey_combo)
         
@@ -438,12 +390,29 @@ class HipsCutoutGUI(QMainWindow):
         left_layout.addWidget(add_btn)
         left_layout.addStretch()
         
-        # Right side - Selected surveys list
+        # Right side - Selected surveys with move buttons
         right_layout = QVBoxLayout()
         right_layout.addWidget(QLabel("Selected Surveys:"))
+        
+        # Add list and buttons in an HBox
+        list_and_buttons = QHBoxLayout()
+        
         self.selected_list = QListWidget()
         self.selected_list.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        right_layout.addWidget(self.selected_list)
+        list_and_buttons.addWidget(self.selected_list)
+        
+        # Add move buttons in a VBox
+        move_buttons = QVBoxLayout()
+        move_up = QPushButton("↑")
+        move_up.clicked.connect(self.move_survey_up)
+        move_down = QPushButton("↓")
+        move_down.clicked.connect(self.move_survey_down)
+        move_buttons.addWidget(move_up)
+        move_buttons.addWidget(move_down)
+        move_buttons.addStretch()
+        list_and_buttons.addLayout(move_buttons)
+        
+        right_layout.addLayout(list_and_buttons)
         
         remove_btn = QPushButton("← Remove")
         remove_btn.clicked.connect(self.remove_survey)
@@ -481,6 +450,26 @@ class HipsCutoutGUI(QMainWindow):
         current_row = self.selected_list.currentRow()
         if current_row >= 0:
             self.selected_list.takeItem(current_row)
+            self.selected_surveys = [self.selected_list.item(i).text() 
+                                   for i in range(self.selected_list.count())]
+
+    def move_survey_up(self):
+        """Move selected survey up in the list"""
+        current_row = self.selected_list.currentRow()
+        if current_row > 0:
+            item = self.selected_list.takeItem(current_row)
+            self.selected_list.insertItem(current_row - 1, item)
+            self.selected_list.setCurrentRow(current_row - 1)
+            self.selected_surveys = [self.selected_list.item(i).text() 
+                                   for i in range(self.selected_list.count())]
+
+    def move_survey_down(self):
+        """Move selected survey down in the list"""
+        current_row = self.selected_list.currentRow()
+        if current_row < self.selected_list.count() - 1:
+            item = self.selected_list.takeItem(current_row)
+            self.selected_list.insertItem(current_row + 1, item)
+            self.selected_list.setCurrentRow(current_row + 1)
             self.selected_surveys = [self.selected_list.item(i).text() 
                                    for i in range(self.selected_list.count())]
 
@@ -719,16 +708,23 @@ class HipsCutoutGUI(QMainWindow):
             filename, _ = QFileDialog.getSaveFileName(
                 self,
                 "Save Collage",
-                f"{self.object_name.text().replace(' ', '_')}_collage.jpg",
-                "JPEG Files (*.jpg *.jpeg)"
+                f"{self.object_name.text().replace(' ', '_')}_collage.png",
+                "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg)"
             )
             if filename:
                 self.log(f"Saving collage to {filename}")
                 try:
+                    # Get file extension
+                    ext = filename.split('.')[-1].lower()
+                    format = 'png' if ext == 'png' else 'jpg'
+                    
+                    # PNG requires higher DPI for good quality
+                    dpi = 600 if format == 'png' else 300
+                    
                     self.current_figure.savefig(filename, 
-                                              format='jpg', 
-                                              bbox_inches='tight', 
-                                              dpi=300)
+                                              format=format,
+                                              bbox_inches='tight',
+                                              dpi=dpi)
                     self.log("Collage saved successfully!")
                 except Exception as e:
                     self.log(f"Error saving collage: {str(e)}")
