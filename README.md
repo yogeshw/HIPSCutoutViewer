@@ -1,6 +1,6 @@
 # HIPSCutoutViewer
 
-A graphical viewer for astronomical image cutouts using the HiPS (Hierarchical Progressive Survey) system from CDS (Centre de Données astronomiques de Strasbourg).
+A graphical downloader and viewer for astronomical image cutouts using the HiPS (Hierarchical Progressive Survey) system from CDS (Centre de Données astronomiques de Strasbourg).
 
 Project repository: https://github.com/ywadadekar/HIPSCutoutViewer
 
