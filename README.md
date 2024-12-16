@@ -2,7 +2,7 @@
 
 A graphical downloader and viewer for astronomical image cutouts using the HiPS (Hierarchical Progressive Survey) system from CDS (Centre de Données astronomiques de Strasbourg).
 
-Project repository: https://github.com/ywadadekar/HIPSCutoutViewer
+Project repository: https://github.com/yogeshw/HIPSCutoutViewer
 
 ## Features
 
@@ -41,7 +41,7 @@ Project repository: https://github.com/ywadadekar/HIPSCutoutViewer
 2. Install required packages:
 
 ## Technical Support and Contributing
-For technical issues, feature requests, or contributions, please visit the [project repository](https://github.com/ywadadekar/HIPSCutoutViewer) and submit an issue or pull request.
+For technical issues, feature requests, or contributions, please visit the [project repository](https://github.com/yogeshw/HIPSCutoutViewer) and submit an issue or pull request.
 
 ## License
 This project is licensed under the GPL 3 License
