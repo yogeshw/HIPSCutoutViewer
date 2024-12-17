@@ -1,6 +1,6 @@
 # HIPSCutoutViewer
 
-A graphical downloader and viewer for astronomical image cutouts using the HiPS (Hierarchical Progressive Survey) system from CDS (Centre de Données astronomiques de Strasbourg).
+A tool for viewing astronomical image cutouts using HiPS (Hierarchical Progressive Survey).
 
 Project repository: https://github.com/yogeshw/HIPSCutoutViewer
 
@@ -37,8 +37,21 @@ Project repository: https://github.com/yogeshw/HIPSCutoutViewer
 
 ## Installation
 
-1. Clone the repository
-2. Install required packages:
+1. Clone the repository:
+```bash
+git clone https://github.com/yogeshw/HIPSCutoutViewer.git
+cd HIPSCutoutViewer
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Run the application:
+```bash
+python hips_cutout_viewer.py
+```
 
 ## Technical Support and Contributing
 For technical issues, feature requests, or contributions, please visit the [project repository](https://github.com/yogeshw/HIPSCutoutViewer) and submit an issue or pull request.

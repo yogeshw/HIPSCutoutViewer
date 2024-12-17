@@ -23,7 +23,7 @@ Repository: https://github.com/yogeshw/HIPSCutoutViewer
  """
 
 import re
-import os  # Add to existing imports at top
+import os
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                             QHBoxLayout, QLabel, QLineEdit, QComboBox, 
                             QPushButton, QTextEdit, QFrame, QFileDialog,
@@ -70,6 +70,26 @@ class DownloadThread(QThread):
         self.object_name = object_name
         self.surveys = surveys
 
+    def get_survey_map(self):
+        """
+        Return a dictionary mapping common survey IDs to their HiPS identifiers.
+        
+        Returns:
+            dict: A dictionary where keys are common survey IDs and values are HiPS identifiers.
+        """
+        return {
+            'CDS/P/2MASS/H': '2MASS/H',
+            'CDS/P/2MASS/J': '2MASS/J',
+            'CDS/P/2MASS/K': '2MASS/K',
+            'CDS/P/DSS2/red': 'DSS2/red',
+            'CDS/P/DSS2/blue': 'DSS2/blue',
+            'CDS/P/PanSTARRS/DR1/g': 'PanSTARRS/DR1/g',
+            'CDS/P/PanSTARRS/DR1/r': 'PanSTARRS/DR1/r',
+            'CDS/P/PanSTARRS/DR1/i': 'PanSTARRS/DR1/i',
+            'CDS/P/PanSTARRS/DR1/z': 'PanSTARRS/DR1/z',
+            'CDS/P/PanSTARRS/DR1/y': 'PanSTARRS/DR1/y'
+        }
+
     def run(self):
         """
         Execute the download thread's main operation.
@@ -102,18 +122,7 @@ class DownloadThread(QThread):
                 try:
                     self.progress.emit(f"Querying {survey_id}...")
                     # Map common survey IDs to their correct HiPS identifiers
-                    survey_map = {
-                        'CDS/P/2MASS/H': '2MASS/H',
-                        'CDS/P/2MASS/J': '2MASS/J',
-                        'CDS/P/2MASS/K': '2MASS/K',
-                        'CDS/P/DSS2/red': 'DSS2/red',
-                        'CDS/P/DSS2/blue': 'DSS2/blue',
-                        'CDS/P/PanSTARRS/DR1/g': 'PanSTARRS/DR1/g',
-                        'CDS/P/PanSTARRS/DR1/r': 'PanSTARRS/DR1/r',
-                        'CDS/P/PanSTARRS/DR1/i': 'PanSTARRS/DR1/i',
-                        'CDS/P/PanSTARRS/DR1/z': 'PanSTARRS/DR1/z',
-                        'CDS/P/PanSTARRS/DR1/y': 'PanSTARRS/DR1/y'
-                    }
+                    survey_map = self.get_survey_map()
                     
                     clean_id = survey_map.get(survey_id, survey_id.replace('CDS/P/', ''))
                     query = f'ID=*{clean_id}*'
@@ -144,7 +153,6 @@ class DownloadThread(QThread):
             images = []
             fov_quantity = getattr(self, 'fov', 0.1) * u.deg
 
-            # Use datasets directly without sorting
             for dataset in available_datasets:
                 hips_id = dataset.get('ID', None)
                 if hips_id is None:
@@ -172,7 +180,6 @@ class DownloadThread(QThread):
         except Exception as e:
             self.error.emit(str(e))
 
-    # Remove sort_datasets_by_filter_order and get_filter_order_value methods
 
     def download_fits(self, coords, fov_quantity, output_dir):
         """
@@ -189,19 +196,7 @@ class DownloadThread(QThread):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
             
-        # Use the same survey mapping as in run method
-        survey_map = {
-            'CDS/P/2MASS/H': '2MASS/H',
-            'CDS/P/2MASS/J': '2MASS/J',
-            'CDS/P/2MASS/K': '2MASS/K',
-            'CDS/P/DSS2/red': 'DSS2/red',
-            'CDS/P/DSS2/blue': 'DSS2/blue',
-            'CDS/P/PanSTARRS/DR1/g': 'PanSTARRS/DR1/g',
-            'CDS/P/PanSTARRS/DR1/r': 'PanSTARRS/DR1/r',
-            'CDS/P/PanSTARRS/DR1/i': 'PanSTARRS/DR1/i',
-            'CDS/P/PanSTARRS/DR1/z': 'PanSTARRS/DR1/z',
-            'CDS/P/PanSTARRS/DR1/y': 'PanSTARRS/DR1/y'
-        }
+        survey_map = self.get_survey_map()
             
         for survey_id in self.surveys.keys():
             try:
