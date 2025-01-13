@@ -674,6 +674,9 @@ class HipsCutoutGUI(QMainWindow):
             self.submit_btn.setEnabled(True)
             return
 
+        # Store current FOV for scale bar calculation
+        self.current_fov = float(self.size_input.text())
+        
         # Create plot
         num_images = len(valid_images)
         cols = 5
@@ -731,11 +734,6 @@ class HipsCutoutGUI(QMainWindow):
         Args:
             ax (Axes): Matplotlib axes object to add markers to
             img (array): Image data used for dimensioning markers
-            
-        Adds:
-        - North-East orientation arrows
-        - Scale bar showing 1 arcminute
-        - Labels for orientation and scale
         """
         # Add North-East arrows
         arrow_length = int(0.1 * img.shape[1])
@@ -754,7 +752,11 @@ class HipsCutoutGUI(QMainWindow):
                 verticalalignment='center')
         
         # Add scale bar (1 arcmin)
-        scale_pixels = int(512 / 6)  # 1 arcmin (1/6 of degree) in pixels
+        # Convert 1 arcmin to pixels based on actual FOV
+        arcmin_in_deg = 1/60  # 1 arcmin = 1/60 degree
+        fov_deg = getattr(self, 'current_fov', 0.1)  # fallback to 0.1 if not set
+        scale_pixels = int((arcmin_in_deg / fov_deg) * img.shape[1])
+        
         bar_y = int(0.1 * img.shape[0])  # 10% from bottom
         bar_x = int(0.9 * img.shape[1])  # 90% from left
         
