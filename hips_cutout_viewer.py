@@ -740,16 +740,32 @@ class HipsCutoutGUI(QMainWindow):
         x_base = int(0.15 * img.shape[1])
         y_base = int(0.15 * img.shape[0])
         
-        # North-East arrows
+        # North arrow with thicker black border
+        ax.arrow(x_base, y_base, 0, arrow_length, color='black', 
+                head_width=9, head_length=14, fc='black', ec='black',
+                width=3)  # Added width parameter for thicker arrow body
         ax.arrow(x_base, y_base, 0, arrow_length, color='white', 
-                head_width=5, head_length=10, fc='white', ec='white')
-        ax.text(x_base, y_base + arrow_length + 15, 'N', color='white', 
-                horizontalalignment='center')
+                head_width=5, head_length=10, fc='white', ec='white',
+                width=1)  # Added width parameter for inner arrow
         
+        # East arrow with thicker black border
+        ax.arrow(x_base, y_base, arrow_length, 0, color='black', 
+                head_width=9, head_length=14, fc='black', ec='black',
+                width=3)  # Added width parameter for thicker arrow body
         ax.arrow(x_base, y_base, arrow_length, 0, color='white', 
-                head_width=5, head_length=10, fc='white', ec='white')
+                head_width=5, head_length=10, fc='white', ec='white',
+                width=1)  # Added width parameter for inner arrow
+        
+        # Add N and E labels with black border
+        ax.text(x_base, y_base + arrow_length + 15, 'N', color='white', 
+                horizontalalignment='center',
+                path_effects=[matplotlib.patheffects.withStroke(linewidth=2, 
+                                                            foreground='black')])
+        
         ax.text(x_base + arrow_length + 15, y_base, 'E', color='white', 
-                verticalalignment='center')
+                verticalalignment='center',
+                path_effects=[matplotlib.patheffects.withStroke(linewidth=2, 
+                                                            foreground='black')])
         
         # Add scale bar (1 arcmin)
         # Convert 1 arcmin to pixels based on actual FOV
